@@ -19,14 +19,15 @@ const routes = (app: Express) => {
     app.get('/users/profile', auth, userController.findById);
 
     //Everyone can access these routes
-    app.get('/events', auth, eventController.getEvents); 
+    app.get('/events', eventController.getEvents); //poner auth 
     app.get('/events/:id', auth, eventController.findById);
 
     //Only organizers can create, update and delete events
     app.post('/events', auth, validateSchema(eventSchema), eventController.create);
     app.put('/events/:id', auth, eventController.update );
     app.delete('/events/:id', auth, eventController.delete );
-
+    app.get('/events/get/:filter/:value', auth, eventController.getEventsByFilter);
+    app.get('/organizer/assistants', auth, eventController.getAllAssistants);
     //Only assistants can subscribe to events
     app.get('/subscriptions', auth, subscriptionController.getSubscriptions);
     app.post('/subscriptions', auth, subscriptionController.create);

@@ -11,7 +11,7 @@ class UserService {
             throw error;
         }
     }
-    
+
     public async findByEmail(email: any): Promise<UserDocument | null> {
         try {
             const user = await UserModel.findOne({email: email}); 

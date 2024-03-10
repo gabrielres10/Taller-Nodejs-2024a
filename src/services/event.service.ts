@@ -1,4 +1,5 @@
 import EventModel, {EventInput, EventDocument} from '../models/event.models';
+import SubscriptionModel, { SubscriptionDocument } from '../models/subscription.models';
 
 class EventService{
 
@@ -47,6 +48,24 @@ class EventService{
             throw error;
         }
     }
+
+    public async getAllEvents(organizer: string): Promise<EventDocument[] | null>  {
+        try {
+            return await EventModel.find({_organizer: organizer});
+        } catch(error) {
+            throw error;
+        }
+    }
+
+    public async getAssistants(eventId: string): Promise<SubscriptionDocument[]> {
+        try {
+            const subscriptions = await SubscriptionModel.find({ eventId }).populate("userId");
+            return subscriptions;
+        } catch(error) {
+            throw error;
+        }
+    }
+    
 
 }
 

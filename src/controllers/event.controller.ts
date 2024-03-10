@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import eventService from "../services/event.service";
-import { EventDocument, EventInput } from "../models/event.models";
+import EventModel, { EventDocument, EventInput } from "../models/event.models";
+import { UserDocument } from "../models/user.models";
 
 class EventController {
 
@@ -71,7 +72,63 @@ class EventController {
         }
     }
 
-    
+    public async getEventsByOrg(req: Request, res: Response){
+        
+    }
+
+    public async getEventsByFilter(req: Request, res: Response){
+        try {
+            const inter: string = req.params.filter;
+            switch(inter){
+                case "date": {
+                    break;
+                }
+                case "location": {
+                    break;
+                }
+                case "name": {
+                    break;
+                }
+                default: {
+                    return res.status(404).json({message: "Bad request, must specify the filter"}); 
+                }
+            } 
+            const event: EventDocument | null = await eventService.findById(req.params.id);
+            
+            if(!event){
+                return res.status(404).json({message: "Event not found"});
+            }
+
+            return res.status(200).json(event)
+        } catch(error) {
+            return res.status(500).json(error)
+        }
+    }
+
+    public async getAllAssistants(req: Request, res: Response){
+        try {
+            const events: EventDocument[] | null = await eventService.getAllEvents(req.body.organizer);
+
+            const responseObj: { [key: string]: any[] } = {};
+
+            if(events){
+                await Promise.all(
+                    events.map(async (event) => {
+                        const id = event._id;
+                        const name = event.title;
+                        const assistants = await eventService.getAssistants(id);
+                        const assistantsIds = assistants.map((assistant) => assistant.userId);
+                        responseObj[name] = assistantsIds;
+                    })
+                );
+                return res.json(responseObj);
+            }
+
+        } catch(error) {
+            return res.status(500).json(error)
+        }
+    }
+
 }
 
 export default new EventController();

@@ -27,7 +27,7 @@ const auth  =  async (req: Request, res: Response, next: NextFunction) => {
             if (foundUser.role !== UserRole.SUPERADMIN) {
                 return res.status(403).json({ message: "Insufficient permissions" });
             } 
-        } else if (req.path.startsWith("/events")) {
+        } else if (req.path.startsWith("/events") || req.path.startsWith("/organizer")) {
             if (req.method === "POST" || req.method === "PUT" || req.method === "DELETE") {
                 if (foundUser.role !== UserRole.ORGANIZER) {
                     return res.status(403).json({ message: "Insufficient permissions" });
