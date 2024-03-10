@@ -21,9 +21,9 @@ class SubscriptionService {
         }
     }
 
-    public async findAll(): Promise<SubscriptionDocument[]> {
+    public async findAllEvents(userId: string): Promise<SubscriptionDocument[]> {
         try {
-            const subscriptions = await SubscriptionModel.find();
+            const subscriptions: SubscriptionDocument[] = await SubscriptionModel.find({ userId }).populate('eventId');
             return subscriptions;
         } catch(error) {
             throw error;

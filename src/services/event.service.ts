@@ -41,6 +41,15 @@ class EventService{
         }
     }
 
+    public async findByFilter(filter: any): Promise<EventDocument[] | null> {
+        try {
+            const events: EventDocument[] | null = await EventModel.find(filter);
+            return events;
+        } catch(error) {
+            throw error;
+        }
+    }
+
     public async delete(id: string): Promise<EventDocument | null> {
         try {
             return await EventModel.findOneAndDelete({_id: id});
