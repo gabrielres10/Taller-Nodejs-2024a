@@ -5,12 +5,17 @@ import validateSchema from "../middlewares/validateSchema";
 import  userSchema  from "../schemas/user.schema";
 
 const routes = (app: Express) => {
-    app.get('/users', userController.getUsers);
-    app.post('/users', validateSchema(userSchema), userController.create);
-    app.put('/users/:id', userController.update );
-    app.delete('/users/:id', userController.delete );
+    //All crud actions over users are reserved for superadmins
+    app.get('/users', auth, userController.getUsers);
+    app.post('/users', auth, validateSchema(userSchema), userController.create);
+    app.put('/users/:id', auth, userController.update );
+    app.delete('/users/:id', auth, userController.delete );
+    app.get('/users/:id', auth, userController.findById);
+
+    //All users can access their own profile
     app.get('/users/profile', auth, userController.findById);
-    app.get('/users/:id', userController.findById);
+
+    //Login is a public route
     app.post('/login/', userController.login);
 };
 

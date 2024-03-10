@@ -95,7 +95,7 @@ class userController {
             if(!isMatch){
                 return res.status(401).json({message: "Not authorized"});
             }
-            
+
             return res.status(200).json( userService.generateToken(userExists));
 
         } catch(error) {
