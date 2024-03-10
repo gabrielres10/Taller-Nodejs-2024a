@@ -15,21 +15,26 @@ const auth  =  async (req: Request, res: Response, next: NextFunction) => {
         const  decode: any = jwt.verify(token, process.env.JWT_SECRET || "secret"); 
         req.body.loggedUser =  decode;
 
-        const foundUser = await userService.findById(decode.user_id);
+        const foundUser: any = await userService.findById(decode.user_id);
 
         if (!foundUser) {
             return res.status(404).json({message: "User not found"});
         }
         
         if (req.path === "/users/profile") {
-            // Route "/users/profile": Only an authenticated user can access
             req.params.id = decode.user_id;
         } else if (req.path.startsWith("/users")) {
-            // Route "/users": Only a superadmin can access
             if (foundUser.role !== UserRole.SUPERADMIN) {
                 return res.status(403).json({ message: "Insufficient permissions" });
             } 
-        } 
+        } else if (req.path.startsWith("/events")) {
+            if (req.method === "POST" || req.method === "PUT" || req.method === "DELETE") {
+                if (foundUser.role !== UserRole.ORGANIZER) {
+                    return res.status(403).json({ message: "Insufficient permissions" });
+                }
+                req.body.organizer = decode.user_id;
+            }
+        }
 
         next();
         
