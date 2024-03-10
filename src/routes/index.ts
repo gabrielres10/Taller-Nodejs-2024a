@@ -1,6 +1,7 @@
 import { Express } from "express";
 import userController from "../controllers/user.controller";
 import eventController from "../controllers/event.controller";
+import subscriptionController from "../controllers/subscription.controller";
 import auth from "../middlewares/auth";
 import validateSchema from "../middlewares/validateSchema";
 import  userSchema  from "../schemas/user.schema";
@@ -25,6 +26,10 @@ const routes = (app: Express) => {
     app.post('/events', auth, validateSchema(eventSchema), eventController.create);
     app.put('/events/:id', auth, eventController.update );
     app.delete('/events/:id', auth, eventController.delete );
+
+    //Only assistants can subscribe to events
+    app.get('/subscriptions', auth, subscriptionController.getSubscriptions);
+    app.post('/subscriptions', auth, subscriptionController.create);
     
     //Login is a public route
     app.post('/login/', userController.login);
