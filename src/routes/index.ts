@@ -8,7 +8,7 @@ import eventSchema from "../schemas/event.schema";
 
 const routes = (app: Express) => {
     //All crud actions over users are reserved for superadmins
-    app.get('/users', userController.getUsers);
+    app.get('/users', auth, userController.getUsers);
     app.post('/users', auth, validateSchema(userSchema), userController.create);
     app.put('/users/:id', auth, userController.update );
     app.delete('/users/:id', auth, userController.delete );
