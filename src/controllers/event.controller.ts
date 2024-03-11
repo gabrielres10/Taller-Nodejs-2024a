@@ -86,7 +86,7 @@ class EventController {
             }
 
             if(eventExists.organizer.toString() !== req.body.organizer){
-                return res.status(401).json({message: "You are not authorized to update this event"});
+                return res.status(401).json({message: "You are not authorized to delete this event"});
             }
 
             const deletedEvent: EventDocument | null = await eventService.delete(req.params.id);
