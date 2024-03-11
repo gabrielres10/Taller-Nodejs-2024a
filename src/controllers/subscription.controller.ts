@@ -45,15 +45,65 @@ class SubscriptionController {
     try {
       const subscriptions: SubscriptionDocument[] =
         await subscriptionService.findAllEvents(req.body.loggedUser.user_id);
-      const events: any[] = subscriptions.map(
-        (subscription) => subscription.eventId
-      );
+
+      const events = subscriptions.map(subscription => ({
+        subscriptionId: subscription._id,
+        event: subscription.eventId
+      }));
 
       return res.status(200).json(events);
     } catch (error) {
       return res.status(500).json(error);
     }
   }
+
+  /**
+   * This method deletes a subscription
+   * @param req the request object
+   * @param res the response object
+   * @returns the deleted subscription
+   */
+  public async delete(req: Request, res: Response) {
+    try {
+
+      const suscriptionExists: SubscriptionDocument | null = await subscriptionService.findById(req.params.id);
+
+      if (!suscriptionExists) {
+        return res.status(404).json({ message: "Subscription not found" });
+      }
+
+      if (suscriptionExists.userId.toString() !== req.body.loggedUser.user_id) {
+        return res.status(401).json({ message: "You are not authorized to delete this subscription" });
+      }
+
+      const deletedSubscription: SubscriptionDocument | null = await subscriptionService.delete(req.params.id);
+
+      return res.status(200).json(`Subscription with id ${deletedSubscription?._id} was deleted`);
+    } catch (error) {
+      return res.status(500).json(error);
+    }
+  }
+
+  public async update(req: Request, res: Response) {
+    try {
+      const subscriptionExists: SubscriptionDocument | null = await subscriptionService.findById(req.params.id);
+
+      if (!subscriptionExists) {
+        return res.status(404).json({ message: "Subscription not found" });
+      }
+
+      if (subscriptionExists.userId.toString() !== req.body.loggedUser.user_id) {
+        return res.status(401).json({ message: "You are not authorized to update this subscription" });
+      }
+
+      const updatedSubscription: SubscriptionDocument | null = await subscriptionService.update(req.params.id, req.body);
+
+      return res.status(200).json(updatedSubscription);
+    } catch (error) {
+      return res.status(500).json(error);
+    }
+  }
+
 }
 
 export default new SubscriptionController();

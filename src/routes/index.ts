@@ -42,6 +42,8 @@ const routes = (app: Express) => {
   //Only assistants can subscribe to events
   app.get("/subscriptions", auth, subscriptionController.getAllSubscriptions);
   app.post("/subscriptions", auth, subscriptionController.create);
+  app.delete("/subscriptions/:id", auth, subscriptionController.delete);
+  app.put("/subscriptions/:id", auth, subscriptionController.update);
 
   //Login is a public route
   app.post("/login", userController.login);

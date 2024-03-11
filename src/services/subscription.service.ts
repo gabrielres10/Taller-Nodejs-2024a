@@ -23,6 +23,61 @@ class SubscriptionService {
   }
 
   /**
+   * This method deletes a subscription
+   * @param subscriptionId the subscription id
+   * @returns the deleted subscription
+   * @throws an error if something goes wrong
+   */
+  public async delete(subscriptionId: string): Promise<SubscriptionDocument | null> {
+    try {
+      const subscription: SubscriptionDocument | null = await SubscriptionModel.findByIdAndDelete(
+        subscriptionId
+      );
+      return subscription;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  /**
+   * This method updates a subscription
+   * @param subscriptionId the subscription id
+   * @param subscriptionInput the subscription input
+   * @returns the updated subscription
+   * @throws an error if something goes wrong
+   */
+  public async update(
+    subscriptionId: string,
+    subscriptionInput: SubscriptionInput
+  ): Promise<SubscriptionDocument | null> {
+    try {
+      const subscription: SubscriptionDocument | null = await SubscriptionModel.findByIdAndUpdate(
+        subscriptionId,
+        subscriptionInput,
+        { new: true }
+      );
+      return subscription;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  /**
+   * This method returns a suscription by id
+   * @param subscriptionId the subscription id
+   * @returns the subscription
+   */
+  public async findById(subscriptionId: string): Promise<SubscriptionDocument | null> {
+    try {
+      const subscription: SubscriptionDocument | null = await SubscriptionModel.findById(subscriptionId);
+      return subscription;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+
+  /**
    * This method returns all subscriptions
    * @returns all subscriptions
    * @throws an error if something goes wrong
