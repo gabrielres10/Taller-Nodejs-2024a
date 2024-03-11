@@ -2,6 +2,7 @@ import SubscriptionModel, {
   SubscriptionDocument,
   SubscriptionInput,
 } from "../models/subscription.models";
+import EventModel from "../models/event.models";
 import { Request, Response } from "express";
 
 class SubscriptionService {
@@ -51,6 +52,10 @@ class SubscriptionService {
     subscriptionInput: SubscriptionInput
   ): Promise<SubscriptionDocument | null> {
     try {
+      const eventExists = await EventModel.findById(subscriptionInput.eventId);
+      if (!eventExists) {
+        return null;
+      }
       const subscription: SubscriptionDocument | null = await SubscriptionModel.findByIdAndUpdate(
         subscriptionId,
         subscriptionInput,

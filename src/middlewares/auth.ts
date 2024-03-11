@@ -49,12 +49,10 @@ const auth = async (req: Request, res: Response, next: NextFunction) => {
         req.body.organizer = decode.user_id;
       }
     } else if (req.path.startsWith("/subscriptions")) {
-      if (req.method === "POST") {
         if (foundUser.role !== UserRole.ASSISTANT) {
           return res.status(403).json({ message: "Insufficient permissions" });
         }
         req.body.userId = decode.user_id;
-      }
     }
 
     next();

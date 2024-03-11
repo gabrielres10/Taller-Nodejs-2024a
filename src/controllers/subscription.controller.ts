@@ -89,14 +89,27 @@ class SubscriptionController {
       const subscriptionExists: SubscriptionDocument | null = await subscriptionService.findById(req.params.id);
 
       if (!subscriptionExists) {
-        return res.status(404).json({ message: "Subscription not found" });
+        return res.status(404).json({ message: "Subscription not valid" });
+      }
+
+      const { eventId, userId }: SubscriptionInput = req.body;
+      
+      const repeatedSubscription: SubscriptionDocument | null =
+        await subscriptionService.findOne({ eventId, userId });
+
+      if (repeatedSubscription) {
+        return res.status(400).json({ message: "This subscription already exists" });
       }
 
       if (subscriptionExists.userId.toString() !== req.body.loggedUser.user_id) {
         return res.status(401).json({ message: "You are not authorized to update this subscription" });
       }
 
-      const updatedSubscription: SubscriptionDocument | null = await subscriptionService.update(req.params.id, req.body);
+      const updatedSubscription: SubscriptionDocument | null = await subscriptionService.update(req.params.id, { eventId, userId });
+
+      if(!updatedSubscription) {
+        return res.status(404).json({ message: "Event does not exist" });
+      }
 
       return res.status(200).json(updatedSubscription);
     } catch (error) {
