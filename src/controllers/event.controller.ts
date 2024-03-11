@@ -62,6 +62,10 @@ class EventController {
             if(!eventExists){
                 return res.status(404).json({message: "Event not found"});
             }
+            
+            if(eventExists.organizer.toString() !== req.body.organizer){
+                return res.status(401).json({message: "You are not authorized to update this event"});
+            }
 
             const updateEvent: EventDocument | null = await eventService.update(req.params.id, req.body);
 
@@ -79,6 +83,10 @@ class EventController {
 
             if(!eventExists){
                 return res.status(404).json({message: "Event not found"});
+            }
+
+            if(eventExists.organizer.toString() !== req.body.organizer){
+                return res.status(401).json({message: "You are not authorized to update this event"});
             }
 
             const deletedEvent: EventDocument | null = await eventService.delete(req.params.id);
