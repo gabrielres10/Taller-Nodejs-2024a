@@ -74,8 +74,7 @@ Esta API te permite interactuar con un sistema de gestión de eventos. Puedes cr
     * *Ejemplo de JSON:*
         ```json
         {
-            "eventId": "65ee6dab4641418a090100bc",
-            "userId": "65ee57d0627b0fa608c625a7"
+            "eventId": "65ee6dab4641418a090100bc"
         }
         ```
 
@@ -105,12 +104,11 @@ Esta API te permite interactuar con un sistema de gestión de eventos. Puedes cr
         }
         ```
 * **Usuarios con rol "assistant":**
-    * *Editar suscripción:* `https://taller-nodejs-2024a.onrender.com/subscriptions`
+    * *Editar suscripción:* `https://taller-nodejs-2024a.onrender.com/subscriptions/65eaa98s9d8a1jky23f10d34`
     * *Ejemplo de JSON:*
         ```json
         {
-            "eventId": "65eaa98s9d8a1jky23f10d34",
-            "userId": "65ee57d07a54as8as658c6aa7"
+            "eventId": "65eaa98s9d8a1jky23f10d34"
         }
         ```
 
