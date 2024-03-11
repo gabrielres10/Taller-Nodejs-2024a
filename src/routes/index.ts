@@ -8,6 +8,10 @@ import  userSchema  from "../schemas/user.schema";
 import eventSchema from "../schemas/event.schema";
 
 const routes = (app: Express) => {
+
+    //All authenticated users can access their own profile
+    app.get('/users/profile', auth, userController.findById);
+
     //All crud actions over users are reserved for superadmins
     app.get('/users', auth, userController.getUsers);
     app.post('/users', auth, validateSchema(userSchema), userController.create);
@@ -15,21 +19,17 @@ const routes = (app: Express) => {
     app.delete('/users/:id', auth, userController.delete );
     app.get('/users/:id', auth, userController.findById);
 
-    //All authenticated users can access their own profile
-    app.get('/users/profile', auth, userController.findById);
-
     //All authenticated users can access these routes
+    app.get('/events/filter', auth, eventController.findByFilter);
     app.get('/events', auth, eventController.getEvents);
     app.get('/events/:id', auth, eventController.findById);
-    app.get('/events/filter/value', auth, eventController.findByFilter)
 
-    //Only organizers can create, update and delete events
+    //Only organizers can create, update and delete events or view their assistants
     app.post('/events', auth, validateSchema(eventSchema), eventController.create);
+    app.get('/events/assistants', auth, eventController.getAllAssistants);
     app.put('/events/:id', auth, eventController.update );
     app.delete('/events/:id', auth, eventController.delete );
-
-    //Only organizers can view their assistants
-    app.get('/organizer/assistants', auth, eventController.getAllAssistants);
+    
 
     //Only assistants can subscribe to events
     app.get('/subscriptions', auth, subscriptionController.getAllSubscriptions);
